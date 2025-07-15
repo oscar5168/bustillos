@@ -12,6 +12,8 @@ if($conexion ->connect_error){
     die("Conexion fallida". $conexion->connect_error);
 }
 
+
+$nombre = $_POST['nombre'];
 $personas = $_POST['personas'];
 $fecha = $_POST['fecha'];
 $hora_inicio = $_POST['hora_inicio'];
@@ -27,7 +29,7 @@ $ask = "SELECT * FROM reserva
             '$hora_inicio' >= hora_salida
         )";
 
-$insert = "INSERT INTO reserva(ID, personas, fecha, hora_entrada, hora_salida) VALUES('NULL', '$personas', '$fecha', '$hora_inicio', '$hora_fin')";
+$insert = "INSERT INTO reserva(ID,nombre, personas, fecha, hora_entrada, hora_salida) VALUES('NULL', '$nombre', '$personas', '$fecha', '$hora_inicio', '$hora_fin')";
 
 $result = $conexion->query($ask);
 

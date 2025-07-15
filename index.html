@@ -36,6 +36,9 @@
   <section class="Reservas">
     <h2>Reservas</h2>
     <form action="reservar.php" method="POST">
+
+        <label for="name">Nombre: </label>
+        <input type="text" id="nombre" name="nombre" required>
         <label for="persona">¿Cuántas personas?</label>
         <input type="number" id="personas" name="personas" min="1" max="50" required>
 
@@ -49,6 +52,13 @@
         <input type="time" id="hora_fin" name="hora_fin" required>
 
         <button type="submit">Reservar</button>
+    </form>
+
+
+    <form action="cancelarReserva.php" method="post">
+        <label for="nombre">Nombre: </label>
+        <input type="text" id="nombre" name="nombre" required>
+        <button type="submit">Cancelar reserva</button>
     </form>
 
   </section>
