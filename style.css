@@ -1,3 +1,9 @@
+
+
+
+
+
+/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -5,20 +11,20 @@
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #464242;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
 }
 
 header {
-  background-color: rgba(0, 0, 0, 0.6); /* Fondo negro con 60% de opacidad */
+  background-color: rgba(0, 0, 0, 0.7);
   padding: 15px 30px;
-  position: absolute;
+  position: fixed;
   width: 100%;
   top: 0;
   left: 0;
   z-index: 10;
 }
-
 
 .navbar {
   display: flex;
@@ -71,35 +77,106 @@ header {
   margin-bottom: 20px;
 }
 
+.hero p {
+  font-size: 20px;
+  margin-bottom: 25px;
+}
+
 .btn {
   background-color: #000000;
   color: white;
-  padding: 12px 24px;
+  padding: 12px 30px;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: bold;
   transition: background 0.3s;
 }
 
 .btn:hover {
+  background-color: #18bc9c;
+}
+
+#separador {
+  height: 60px;
+  background-color: #000000;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+section {
+  padding: 60px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.servicios, .Reservas {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-top: 40px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #222;
+}
+
+/* Formularios */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  align-items: center;
+}
+
+label {
+  font-weight: 600;
+}
+
+input, button {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+button {
+  background-color: #18bc9c;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
   background-color: #14947f;
 }
 
-#separador{
-    height: 50px;
-    background-color: #000000;
-}
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-.servicios{
-    background-color: #ffffff;
-    height: 350px;
-    margin-left: 50%;
-    text-align: center;
-}
+  .menu {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+  }
 
-.Reservas{
-    background-color: #ffffff;
-    height: 350px;
+  .hero h1 {
+    font-size: 36px;
+  }
 
-    text-align: center;
+  .btn {
+    padding: 10px 20px;
+  }
 }
