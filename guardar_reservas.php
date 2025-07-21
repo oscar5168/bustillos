@@ -10,7 +10,6 @@ if ($conexion->connect_error) {
     die("Conexión fallida: " . $conexion->connect_error);
 }
 
-// OJO: aquí usamos "dias" porque así se llama la columna
 $query = "SELECT dias, mes, anio FROM diasOcupados WHERE estado = 'reservado'";
 $resultado = $conexion->query($query);
 

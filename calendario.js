@@ -74,5 +74,5 @@ selectorMes.addEventListener("change", () => {
   }
 });
 
-// Establecer mes por defecto
+
 selectorMes.value = "1";
