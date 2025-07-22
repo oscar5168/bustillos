@@ -3,18 +3,39 @@ const selectorMes = document.getElementById("mes");
 let diasEnElMes = 0;
 let diasSeleccionados = [];
 
-// Obtén los días ocupados de la base de datos
+// Obtiene los días ocupados de la base de datos
 let diasOcupados = [];
-fetch("guardar_reservas.php")
+fetch("reservas.php")
   .then(res => res.json())
   .then(data => {
     diasOcupados = data;
-    selectorMes.dispatchEvent(new Event("change")); // Dibujar el calendario al cargar
+    selectorMes.dispatchEvent(new Event("change"));
   });
 
 document.getElementById("Guardar").addEventListener("click", function () {
-  diasSeleccionados.forEach(day => {
-    console.log(day.textContent);
+  const datos = diasSeleccionados.map(day => ({
+    dias: day.dataset.dia,
+    mes: day.dataset.mes,
+    anio: day.dataset.anio,
+    estado: "reservado"
+  }));
+
+  fetch("guardarReservas.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(datos)
+  })
+  .then(response => response.text())
+  .then(result => {
+    alert("Días guardados correctamente");
+    diasSeleccionados = [];
+    selectorMes.dispatchEvent(new Event("change"));
+  })
+  .catch(error => {
+    console.error("Error al guardar:", error);
+    alert("Error al guardar los días");
   });
 });
 
