@@ -2,6 +2,7 @@ const calendario = document.getElementById("calendario");
 const selectorMes = document.getElementById("mes");
 let diasEnElMes = 0;
 let diasSeleccionados = [];
+let diasNoSeleccionados = [];
 
 // Obtiene los días ocupados de la base de datos
 let diasOcupados = [];
@@ -12,12 +13,25 @@ fetch("reservas.php")
     selectorMes.dispatchEvent(new Event("change"));
   });
 
-document.getElementById("Guardar").addEventListener("click", function () {
-  const datos = diasSeleccionados.map(day => ({
+if (!esDueno) {
+  document.getElementById("Guardar").style.display = "none";
+}else{
+
+  document.getElementById("Guardar").addEventListener("click", function () {
+
+  console.log(esDueno);
+  const reservas = diasSeleccionados.map(day => ({
     dias: day.dataset.dia,
     mes: day.dataset.mes,
     anio: day.dataset.anio,
     estado: "reservado"
+  }));
+
+  const disponibles = diasNoSeleccionados.map(day =>({
+    dias: day.dataset.dia,
+    mes: day.dataset.mes,
+    anio: day.dataset.anio,
+    estado: "disponible"
   }));
 
   fetch("guardarReservas.php", {
@@ -25,12 +39,16 @@ document.getElementById("Guardar").addEventListener("click", function () {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(datos)
+    body: JSON.stringify({
+      reservas: reservas,
+      disponibles: disponibles
+    })
   })
   .then(response => response.text())
   .then(result => {
     alert("Días guardados correctamente");
     diasSeleccionados = [];
+    diasNoSeleccionados = [];
     selectorMes.dispatchEvent(new Event("change"));
   })
   .catch(error => {
@@ -39,10 +57,13 @@ document.getElementById("Guardar").addEventListener("click", function () {
   });
 });
 
+}
+
 selectorMes.addEventListener("change", () => {
   const mes = parseInt(selectorMes.value);
   const añoActual = new Date().getFullYear();
-  
+  let index = 0;
+
   switch (mes) {
     case 1: case 3: case 5: case 7: case 8: case 10: case 12:
       diasEnElMes = 31;
@@ -62,12 +83,10 @@ selectorMes.addEventListener("change", () => {
     dia.className = "dia disponible";
     dia.textContent = i;
 
-    // Agrega atributos data
     dia.dataset.dia = i;
     dia.dataset.mes = mes;
     dia.dataset.anio = añoActual;
 
-    // Verificar si está ocupado
     const ocupado = diasOcupados.find(d =>
       parseInt(d.dias) === i &&
       parseInt(d.mes) === mes &&
@@ -79,21 +98,37 @@ selectorMes.addEventListener("change", () => {
       dia.classList.add("reservado");
     }
 
-    dia.addEventListener("click", () => {
-      dia.classList.toggle("disponible");
-      dia.classList.toggle("reservado");
+    if (dia.classList.contains("reservado")) {
+      diasSeleccionados.push(dia);
+      index = diasNoSeleccionados.indexOf(dia);
+      if (index > -1) diasNoSeleccionados.splice(index, 1);
+    } else {
+      diasNoSeleccionados.push(dia);
+      index = diasSeleccionados.indexOf(dia);
+      if (index > -1) diasSeleccionados.splice(index, 1);
+    }
 
-      if (dia.classList.contains("reservado")) {
-        diasSeleccionados.push(dia);
-      } else {
-        let index = diasSeleccionados.indexOf(dia);
-        if (index > -1) diasSeleccionados.splice(index, 1);
-      }
-    });
+    if (esDueno) {
+      dia.addEventListener("click", () => {
+        dia.classList.toggle("disponible");
+        dia.classList.toggle("reservado");
+
+        if (dia.classList.contains("reservado")) {
+          diasSeleccionados.push(dia);
+          index = diasNoSeleccionados.indexOf(dia);
+          if (index > -1) diasNoSeleccionados.splice(index, 1);
+        } else {
+          diasNoSeleccionados.push(dia);
+          index = diasSeleccionados.indexOf(dia);
+          if (index > -1) diasSeleccionados.splice(index, 1);
+        }
+      });
+    }
 
     calendario.appendChild(dia);
   }
 });
+
 
 
 selectorMes.value = "1";

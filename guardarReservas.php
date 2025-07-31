@@ -1,5 +1,4 @@
 <?php 
-
 $host = "localhost";
 $usuario = "root";
 $pasword = "";
@@ -11,14 +10,17 @@ if($conexion->connect_error){
     die("error de conexion: ".$conexion->connect_error);
 }
 
-$input = file_get_contents("php://input");
-$dias = json_decode($input, true);
+$data = json_decode(file_get_contents("php://input"), true);
 
-foreach ($dias as $dia) {
-    $d = intval($dia["dias"]);
-    $m = intval($dia["mes"]);
-    $a = intval($dia["anio"]);
-    $estado = $conexion->real_escape_string($dia["estado"]);
+$reservas = $data["reservas"];
+$disponibles = $data["disponibles"];
+
+
+foreach ($reservas as $reserva) {
+    $d = intval($reserva["dias"]);
+    $m = intval($reserva["mes"]);
+    $a = intval($reserva["anio"]);
+    $estado = $conexion->real_escape_string($reserva["estado"]);
 
     // Verificar si ya existe
     $check = $conexion->prepare("SELECT ID FROM diasocupados WHERE dias = ? AND mes = ? AND anio = ?");
@@ -35,6 +37,18 @@ foreach ($dias as $dia) {
     }
 
     $check->close();
+}
+
+foreach($disponibles as $disp){
+    $d = intval($disp["dias"]);
+    $m = intval($disp["mes"]);
+    $a = intval(value: $disp["anio"]);
+    $estado = $conexion->real_escape_string($disp["estado"]);
+ 
+    $delete = $conexion->prepare("DELETE FROM diasocupados WHERE dias = ? AND mes = ? AND anio = ?");
+    $delete->bind_param("iii", $d, $m, $a);
+    $delete->execute();
+    $delete->close();
 }
 
 $conexion->close();
